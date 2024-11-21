@@ -112,7 +112,7 @@ export default class CommandRunner {
     await this.io.closeResponse();
 
     if (commandPromise != null) {
-        await commandPromise;
+      await commandPromise;
     }
   }
 }
