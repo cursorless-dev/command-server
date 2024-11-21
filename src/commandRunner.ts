@@ -106,8 +106,13 @@ export default class CommandRunner {
         uuid,
         warnings,
       });
+      commandPromise = undefined;
     }
 
     await this.io.closeResponse();
+
+    if (commandPromise != null) {
+        await commandPromise;
+    }
   }
 }
