@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 
-import { NativeIo } from "./nativeIo";
 import CommandRunner from "./commandRunner";
+import { getUserDataPath } from "./getUserDataPath";
+import { NativeIo } from "./nativeIo";
 import { FocusedElementType } from "./types";
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -20,9 +21,14 @@ export async function activate(context: vscode.ExtensionContext) {
         focusedElementType = undefined;
       }
     ),
+
     vscode.commands.registerCommand(
       "command-server.getFocusedElementType",
       () => focusedElementType
+    ),
+
+    vscode.commands.registerCommand("command-server.getUserDataPath", () =>
+      getUserDataPath(context)
     )
   );
 
