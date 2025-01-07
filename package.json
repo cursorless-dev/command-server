@@ -41,6 +41,10 @@
       {
         "command": "command-server.getFocusedElementType",
         "title": "Returns the type of the currently focused element in vscode"
+      },
+      {
+        "command": "command-server.getUserDataPath",
+        "title": "Returns the path to the user data directory"
       }
     ],
     "keybindings": [
