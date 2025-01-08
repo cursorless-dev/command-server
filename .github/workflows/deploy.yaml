@@ -10,7 +10,7 @@ jobs:
   publish-extension:
     name: Publish to marketplace
     runs-on: ubuntu-latest
-    environment: Production
+    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
