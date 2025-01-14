@@ -1,22 +1,26 @@
+import { NodeIo, TalonRpcServer } from "talon-rpc";
 import * as vscode from "vscode";
-
-import { NativeIo } from "./nativeIo";
 import CommandRunner from "./commandRunner";
+import { RPC_DIR_NAME } from "./constants";
 import { FocusedElementType } from "./types";
 
 export async function activate(context: vscode.ExtensionContext) {
-  const io = new NativeIo();
+  const commandRunner = new CommandRunner();
+  const io = new NodeIo(RPC_DIR_NAME);
+  const rpc = new TalonRpcServer(io, commandRunner.runCommand);
+
   await io.initialize();
 
-  const commandRunner = new CommandRunner(io);
   let focusedElementType: FocusedElementType | undefined;
+
+  io.dirPath;
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "command-server.runCommand",
       async (focusedElementType_: FocusedElementType) => {
         focusedElementType = focusedElementType_;
-        await commandRunner.runCommand();
+        await rpc.executeRequest();
         focusedElementType = undefined;
       }
     ),
