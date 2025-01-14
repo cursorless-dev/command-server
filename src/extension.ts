@@ -13,8 +13,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   let focusedElementType: FocusedElementType | undefined;
 
-  io.dirPath;
-
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "command-server.runCommand",
