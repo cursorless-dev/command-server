@@ -22,6 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
         focusedElementType = undefined;
       }
     ),
+
     vscode.commands.registerCommand(
       "command-server.getFocusedElementType",
       () => focusedElementType
