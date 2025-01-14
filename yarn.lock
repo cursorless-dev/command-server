@@ -1350,6 +1350,11 @@ table@^6.0.4:
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
 
+talon-rpc@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/talon-rpc/-/talon-rpc-2.1.0.tgz#fd66e8ace51a8d359cb960f6269dfbf11915e1e9"
+  integrity sha512-ADIJtafDcm2FYx1Jk0wah1fm5lxFkUT3XIvOKxiCkyckMGS5uQ1BgdacG5fnSLbJQcj5DZ9Shu0DDh8N1k1CzA==
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
