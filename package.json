@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pokey/command-server"
+    "url": "https://github.com/cursorless-dev/command-server"
   },
   "version": "0.10.1",
   "engines": {
