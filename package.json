@@ -134,6 +134,6 @@
   "dependencies": {
     "minimatch": "^3.0.4",
     "rimraf": "^3.0.2",
-    "talon-rpc": "2.2.0"
+    "talon-rpc": "2.1.0"
   }
 }
