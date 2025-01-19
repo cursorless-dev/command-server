@@ -109,6 +109,11 @@
           "type": "boolean",
           "default": false,
           "description": "Whether to enable protection against background windows executing a command"
+        },
+        "command-server.tmpDir": {
+          "type": "string",
+          "default": "",
+          "description": "Path to temp directory. Used to override TMPDIR, TEMP, and TMP environment variables."
         }
       }
     }
@@ -139,6 +144,6 @@
   "dependencies": {
     "minimatch": "^3.0.4",
     "rimraf": "^3.0.2",
-    "talon-rpc": "2.1.0"
+    "talon-rpc": "2.2.0"
   }
 }
