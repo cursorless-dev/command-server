@@ -85,6 +85,11 @@
         "args": "terminal"
       }
     ],
+    "configurationDefaults": {
+      "terminal.integrated.commandsToSkipShell": [
+        "command-server.runCommand"
+      ]
+    },
     "configuration": {
       "title": "Command server",
       "properties": {
