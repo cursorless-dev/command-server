@@ -1,15 +1,22 @@
+import type { RequestCallback } from "talon-rpc";
 import { NodeIo, TalonRpcServer } from "talon-rpc";
 import * as vscode from "vscode";
 import CommandRunner from "./commandRunner";
 import { RPC_DIR_NAME } from "./constants";
 import { FocusedElementType } from "./types";
+import { getTmpdDirSetting, onTmpDirSettingChange } from "./tmpDirSetting";
 
 export async function activate(context: vscode.ExtensionContext) {
   const commandRunner = new CommandRunner();
-  const io = new NodeIo(RPC_DIR_NAME);
-  const rpc = new TalonRpcServer(io, commandRunner.runCommand);
-
+  let io = new NodeIo(RPC_DIR_NAME, getTmpdDirSetting());
+  let rpc = new TalonRpcServer(io, commandRunner.runCommand);
   await io.initialize();
+
+  onTmpDirSettingChange(async () => {
+    io = new NodeIo(RPC_DIR_NAME, getTmpdDirSetting());
+    rpc = new TalonRpcServer(io, commandRunner.runCommand);
+    await io.initialize();
+  });
 
   let focusedElementType: FocusedElementType | undefined;
 
