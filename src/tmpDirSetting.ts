@@ -9,7 +9,7 @@ export function getTmpdDirSetting(): string | undefined {
 }
 
 export function onTmpDirSettingChange(callback: () => void) {
-  vscode.workspace.onDidChangeConfiguration(async (e) => {
+  vscode.workspace.onDidChangeConfiguration((e) => {
     if (e.affectsConfiguration("command-server.tmpDir")) {
       callback();
     }
