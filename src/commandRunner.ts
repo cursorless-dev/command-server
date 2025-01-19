@@ -1,16 +1,14 @@
 import { Minimatch } from "minimatch";
+import type { RequestCallbackOptions } from "talon-rpc";
 import * as vscode from "vscode";
-
 import { any } from "./regex";
-import { Request } from "./types";
-import { Io } from "./io";
 
 export default class CommandRunner {
   private allowRegex!: RegExp;
   private denyRegex!: RegExp | null;
   private backgroundWindowProtection!: boolean;
 
-  constructor(private io: Io) {
+  constructor() {
     this.reloadConfiguration = this.reloadConfiguration.bind(this);
     this.runCommand = this.runCommand.bind(this);
 
@@ -18,7 +16,7 @@ export default class CommandRunner {
     vscode.workspace.onDidChangeConfiguration(this.reloadConfiguration);
   }
 
-  reloadConfiguration() {
+  private reloadConfiguration() {
     const allowList = vscode.workspace
       .getConfiguration("command-server")
       .get<string[]>("allowList")!;
@@ -41,77 +39,23 @@ export default class CommandRunner {
       .get<boolean>("backgroundWindowProtection")!;
   }
 
-  /**
-   * Reads a command from the request file and executes it.  Writes information
-   * about command execution to the result of the command to the response file,
-   * If requested, will wait for command to finish, and can also write command
-   * output to response file.  See also documentation for Request / Response
-   * types.
-   */
-  async runCommand() {
-    await this.io.prepareResponse();
-
-    let request: Request;
-
-    try {
-      request = await this.io.readRequest();
-    } catch (err) {
-      await this.io.closeResponse();
-      throw err;
+  runCommand(commandId: string, args: any[], options: RequestCallbackOptions) {
+    if (!vscode.window.state.focused) {
+      if (this.backgroundWindowProtection) {
+        throw new Error("This editor is not active");
+      } else {
+        options.warn("This editor is not active");
+      }
     }
 
-    const { commandId, args, uuid, returnCommandOutput, waitForFinish } =
-      request;
-
-    const warnings = [];
-
-    let commandPromise: Thenable<unknown> | undefined;
-
-    try {
-      if (!vscode.window.state.focused) {
-        if (this.backgroundWindowProtection) {
-          throw new Error("This editor is not active");
-        } else {
-          warnings.push("This editor is not active");
-        }
-      }
-
-      if (!commandId.match(this.allowRegex)) {
-        throw new Error("Command not in allowList");
-      }
-
-      if (this.denyRegex != null && commandId.match(this.denyRegex)) {
-        throw new Error("Command in denyList");
-      }
-
-      commandPromise = vscode.commands.executeCommand(commandId, ...args);
-
-      let commandReturnValue = null;
-
-      if (returnCommandOutput) {
-        commandReturnValue = await commandPromise;
-      } else if (waitForFinish) {
-        await commandPromise;
-      }
-
-      await this.io.writeResponse({
-        error: null,
-        uuid,
-        returnValue: commandReturnValue,
-        warnings,
-      });
-    } catch (err) {
-      await this.io.writeResponse({
-        error: (err as Error).message,
-        uuid,
-        warnings,
-      });
+    if (!commandId.match(this.allowRegex)) {
+      throw new Error("Command not in allowList");
     }
 
-    await this.io.closeResponse();
-
-    if (commandPromise != null) {
-      await commandPromise;
+    if (this.denyRegex != null && commandId.match(this.denyRegex)) {
+      throw new Error("Command in denyList");
     }
+
+    return vscode.commands.executeCommand(commandId, ...args);
   }
 }
