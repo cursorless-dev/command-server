@@ -52,8 +52,8 @@
       },
       {
         "command": "command-server.runCommand",
-        "key": "ctrl+shift+alt+p",
-        "mac": "cmd+shift+alt+p",
+        "key": "ctrl+shift+alt+meta+`",
+        "mac": "cmd+shift+alt+option+`",
         "args": "other"
       },
       {
@@ -65,8 +65,8 @@
       },
       {
         "command": "command-server.runCommand",
-        "key": "ctrl+shift+alt+p",
-        "mac": "cmd+shift+alt+p",
+        "key": "ctrl+shift+alt+meta+`",
+        "mac": "cmd+shift+alt+option+`",
         "when": "editorTextFocus",
         "args": "textEditor"
       },
@@ -79,8 +79,8 @@
       },
       {
         "command": "command-server.runCommand",
-        "key": "ctrl+shift+alt+p",
-        "mac": "cmd+shift+alt+p",
+        "key": "ctrl+shift+alt+meta+`",
+        "mac": "cmd+shift+alt+option+`",
         "when": "terminalFocus",
         "args": "terminal"
       }
