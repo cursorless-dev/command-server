@@ -1,15 +1,24 @@
 import { NodeIo, TalonRpcServer } from "talon-rpc";
 import * as vscode from "vscode";
 import CommandRunner from "./commandRunner";
+import {
+  getCommunicationDirLocationSetting,
+  onCommunicationDirLocationSettingChange,
+} from "./communicationDirLocationSetting";
 import { RPC_DIR_NAME } from "./constants";
 import { FocusedElementType } from "./types";
 
 export async function activate(context: vscode.ExtensionContext) {
   const commandRunner = new CommandRunner();
-  const io = new NodeIo(RPC_DIR_NAME);
-  const rpc = new TalonRpcServer(io, commandRunner.runCommand);
-
+  let io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
+  let rpc = new TalonRpcServer(io, commandRunner.runCommand);
   await io.initialize();
+
+  onCommunicationDirLocationSettingChange(async () => {
+    io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
+    rpc = new TalonRpcServer(io, commandRunner.runCommand);
+    await io.initialize();
+  });
 
   let focusedElementType: FocusedElementType | undefined;
 
