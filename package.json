@@ -110,10 +110,10 @@
           "default": false,
           "description": "Whether to enable protection against background windows executing a command"
         },
-        "command-server.tmpDir": {
+        "command-server.communicationParentDirectory": {
           "type": "string",
           "default": "",
-          "description": "Path to temp directory. Used to override TMPDIR, TEMP, and TMP environment variables."
+          "description": "The directory in which the command server will create a directory to communicate with the client. You shouldn't set this unless your TMPDIR/TEMP/TMP environment variables are inconsistent between VS Code and the Talon/Python command client. Currently, this is only useful when set to a temporary directory."
         }
       }
     }
