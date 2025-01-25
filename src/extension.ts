@@ -1,22 +1,21 @@
-import type { RequestCallback } from "talon-rpc";
 import { NodeIo, TalonRpcServer } from "talon-rpc";
 import * as vscode from "vscode";
 import CommandRunner from "./commandRunner";
+import {
+  getCommunicationDirLocationSetting,
+  onCommunicationDirLocationSettingChange,
+} from "./communicationDirLocationSetting";
 import { RPC_DIR_NAME } from "./constants";
 import { FocusedElementType } from "./types";
-import {
-  getCommunicationParentDirSetting,
-  onCommunicationParentDirSettingChange,
-} from "./communicationParentDirSetting";
 
 export async function activate(context: vscode.ExtensionContext) {
   const commandRunner = new CommandRunner();
-  let io = new NodeIo(RPC_DIR_NAME, getCommunicationParentDirSetting());
+  let io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
   let rpc = new TalonRpcServer(io, commandRunner.runCommand);
   await io.initialize();
 
-  onCommunicationParentDirSettingChange(async () => {
-    io = new NodeIo(RPC_DIR_NAME, getCommunicationParentDirSetting());
+  onCommunicationDirLocationSettingChange(async () => {
+    io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
     rpc = new TalonRpcServer(io, commandRunner.runCommand);
     await io.initialize();
   });
