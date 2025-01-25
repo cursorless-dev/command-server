@@ -4,16 +4,19 @@ import * as vscode from "vscode";
 import CommandRunner from "./commandRunner";
 import { RPC_DIR_NAME } from "./constants";
 import { FocusedElementType } from "./types";
-import { getTmpdDirSetting, onTmpDirSettingChange } from "./tmpDirSetting";
+import {
+  getCommunicationParentDirSetting,
+  onCommunicationParentDirSettingChange,
+} from "./communicationParentDirSetting";
 
 export async function activate(context: vscode.ExtensionContext) {
   const commandRunner = new CommandRunner();
-  let io = new NodeIo(RPC_DIR_NAME, getTmpdDirSetting());
+  let io = new NodeIo(RPC_DIR_NAME, getCommunicationParentDirSetting());
   let rpc = new TalonRpcServer(io, commandRunner.runCommand);
   await io.initialize();
 
-  onTmpDirSettingChange(async () => {
-    io = new NodeIo(RPC_DIR_NAME, getTmpdDirSetting());
+  onCommunicationParentDirSettingChange(async () => {
+    io = new NodeIo(RPC_DIR_NAME, getCommunicationParentDirSetting());
     rpc = new TalonRpcServer(io, commandRunner.runCommand);
     await io.initialize();
   });
