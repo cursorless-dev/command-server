@@ -1,45 +1,43 @@
-import { Minimatch } from "minimatch";
 import type { RequestCallbackOptions } from "talon-rpc";
 import * as vscode from "vscode";
-import { any } from "./regex";
+import { globsToRegex } from "./regex";
 
-export default class CommandRunner {
+export class CommandRunner {
   private allowRegex!: RegExp;
   private denyRegex!: RegExp | null;
   private backgroundWindowProtection!: boolean;
 
-  constructor() {
+  public constructor() {
     this.reloadConfiguration = this.reloadConfiguration.bind(this);
     this.runCommand = this.runCommand.bind(this);
 
     this.reloadConfiguration();
-    vscode.workspace.onDidChangeConfiguration(this.reloadConfiguration);
+    vscode.workspace.onDidChangeConfiguration(() => this.reloadConfiguration());
   }
 
-  private reloadConfiguration() {
+  private reloadConfiguration(): void {
     const allowList = vscode.workspace
       .getConfiguration("command-server")
-      .get<string[]>("allowList")!;
+      .get<string[]>("allowList", []);
 
-    this.allowRegex = any(
-      ...allowList.map((glob) => new Minimatch(glob).makeRe())
-    );
+    this.allowRegex = globsToRegex(allowList);
 
     const denyList = vscode.workspace
       .getConfiguration("command-server")
-      .get<string[]>("denyList")!;
+      .get<string[]>("denyList", []);
 
-    this.denyRegex =
-      denyList.length === 0
-        ? null
-        : any(...denyList.map((glob) => new Minimatch(glob).makeRe()));
+    this.denyRegex = denyList.length === 0 ? null : globsToRegex(denyList);
 
     this.backgroundWindowProtection = vscode.workspace
       .getConfiguration("command-server")
-      .get<boolean>("backgroundWindowProtection")!;
+      .get<boolean>("backgroundWindowProtection", false);
   }
 
-  runCommand(commandId: string, args: any[], options: RequestCallbackOptions) {
+  public runCommand(
+    commandId: string,
+    args: unknown[],
+    options: RequestCallbackOptions,
+  ): unknown {
     if (!vscode.window.state.focused) {
       if (this.backgroundWindowProtection) {
         throw new Error("This editor is not active");
@@ -48,7 +46,7 @@ export default class CommandRunner {
       }
     }
 
-    if (!commandId.match(this.allowRegex)) {
+    if (!this.allowRegex.test(commandId)) {
       throw new Error("Command not in allowList");
     }
 
