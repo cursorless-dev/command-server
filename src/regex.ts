@@ -1,10 +1,10 @@
 import { Minimatch } from "minimatch";
 
-export function globsToRegex(globs: string[]): RegExp {
+export function globsToRegex(globs: string[]): RegExp | undefined {
   const regexes = globs
     .map((glob) => new Minimatch(glob).makeRe())
     .filter((regex): regex is RegExp => regex !== false);
-  return any(regexes);
+  return regexes.length > 0 ? any(regexes) : undefined;
 }
 
 /**

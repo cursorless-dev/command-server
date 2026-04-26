@@ -3,12 +3,11 @@ import * as vscode from "vscode";
 import { globsToRegex } from "./regex";
 
 export class CommandRunner {
-  private allowRegex!: RegExp;
-  private denyRegex!: RegExp | null;
+  private allowRegex: RegExp | undefined;
+  private denyRegex: RegExp | undefined;
   private backgroundWindowProtection!: boolean;
 
   public constructor() {
-    this.reloadConfiguration = this.reloadConfiguration.bind(this);
     this.runCommand = this.runCommand.bind(this);
 
     this.reloadConfiguration();
@@ -20,13 +19,12 @@ export class CommandRunner {
       .getConfiguration("command-server")
       .get<string[]>("allowList", []);
 
-    this.allowRegex = globsToRegex(allowList);
-
     const denyList = vscode.workspace
       .getConfiguration("command-server")
       .get<string[]>("denyList", []);
 
-    this.denyRegex = denyList.length === 0 ? null : globsToRegex(denyList);
+    this.allowRegex = globsToRegex(allowList);
+    this.denyRegex = globsToRegex(denyList);
 
     this.backgroundWindowProtection = vscode.workspace
       .getConfiguration("command-server")
@@ -46,11 +44,11 @@ export class CommandRunner {
       }
     }
 
-    if (!this.allowRegex.test(commandId)) {
+    if (this.allowRegex != null && !this.allowRegex.test(commandId)) {
       throw new Error("Command not in allowList");
     }
 
-    if (this.denyRegex != null && commandId.match(this.denyRegex)) {
+    if (this.denyRegex?.test(commandId)) {
       throw new Error("Command in denyList");
     }
 
