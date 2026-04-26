@@ -30,4 +30,4 @@ jobs:
         run: npm --color run lint
 
       - name: Run tests
-        run: npm --color run test:ci
+        run: xvfb-run -a npm --color run test:ci
