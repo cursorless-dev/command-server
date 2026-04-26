@@ -23,7 +23,8 @@
   "files": [
     "out",
     "!out/test",
-    "images"
+    "images",
+    "CHANGELOG.md"
   ],
   "extensionKind": [
     "ui"
