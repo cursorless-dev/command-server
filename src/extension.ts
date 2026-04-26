@@ -1,23 +1,28 @@
 import { NodeIo, TalonRpcServer } from "talon-rpc";
 import * as vscode from "vscode";
-import CommandRunner from "./commandRunner";
+import { CommandRunner } from "./commandRunner";
 import {
   getCommunicationDirLocationSetting,
   onCommunicationDirLocationSettingChange,
 } from "./communicationDirLocationSetting";
-import { RPC_DIR_NAME } from "./constants";
-import { FocusedElementType } from "./types";
+import type { FocusedElementType, ReturnApi } from "./types";
 
-export async function activate(context: vscode.ExtensionContext) {
+export const RPC_DIR_NAME = "vscode-command-server";
+
+export async function activate(
+  context: vscode.ExtensionContext,
+): Promise<ReturnApi> {
   const commandRunner = new CommandRunner();
   let io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
+  // oxlint-disable-next-line typescript/unbound-method
   let rpc = new TalonRpcServer(io, commandRunner.runCommand);
   await io.initialize();
 
-  onCommunicationDirLocationSettingChange(async () => {
+  onCommunicationDirLocationSettingChange(() => {
     io = new NodeIo(RPC_DIR_NAME, getCommunicationDirLocationSetting());
+    // oxlint-disable-next-line typescript/unbound-method
     rpc = new TalonRpcServer(io, commandRunner.runCommand);
-    await io.initialize();
+    void io.initialize();
   });
 
   let focusedElementType: FocusedElementType | undefined;
@@ -29,34 +34,20 @@ export async function activate(context: vscode.ExtensionContext) {
         focusedElementType = focusedElementType_;
         await rpc.executeRequest();
         focusedElementType = undefined;
-      }
+      },
     ),
 
     vscode.commands.registerCommand(
       "command-server.getFocusedElementType",
-      () => focusedElementType
-    )
+      () => focusedElementType,
+    ),
   );
 
   return {
-    /**
-     * The type of the focused element in vscode at the moment of the command being executed.
-     */
-    getFocusedElementType: async () => focusedElementType,
+    getFocusedElementType: () => Promise.resolve(focusedElementType),
 
-    /**
-     * These signals can be used as a form of IPC to indicate that an event has
-     * occurred.
-     */
     signals: {
-      /**
-       * This signal is emitted by the voice engine to indicate that a phrase has
-       * just begun execution.
-       */
       prePhrase: io.getInboundSignal("prePhrase"),
     },
   };
 }
-
-// this method is called when your extension is deactivated
-export function deactivate() {}

@@ -2,15 +2,15 @@
   "name": "command-server",
   "displayName": "Command server",
   "description": "Exposes a file-based RPC API for running VSCode commands",
+  "version": "0.13.0",
   "publisher": "pokey",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cursorless-dev/command-server"
+    "url": "git+https://github.com/cursorless-dev/command-server.git"
   },
-  "version": "0.12.0",
   "engines": {
-    "vscode": "^1.53.0"
+    "vscode": "^1.98.0"
   },
   "categories": [
     "Other"
@@ -19,6 +19,12 @@
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
+  "icon": "images/icon.png",
+  "files": [
+    "out",
+    "!out/test",
+    "images"
+  ],
   "extensionKind": [
     "ui"
   ],
@@ -119,31 +125,33 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
-    "vscode:uninstall": "node ./out/uninstall.js"
-  },
-  "devDependencies": {
-    "@types/glob": "^7.1.3",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^15.12.1",
-    "@types/rimraf": "^3.0.0",
-    "@types/vscode": "^1.53.0",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
-    "eslint": "^7.15.0",
-    "glob": "^7.1.6",
-    "mocha": "^8.1.3",
-    "typescript": "^4.1.2",
-    "vscode-test": "^1.4.1"
+    "clean": "rm -rf ./out",
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p .",
+    "watch": "tsc -watch -p .",
+    "lint": "npm run typecheck && npm run lint:ts && npm run lint:fmt",
+    "typecheck": "tsc -p . --noEmit",
+    "lint:ts": "oxlint -c oxlint.config.mts --deny-warnings .",
+    "lint:fmt": "oxfmt --check .",
+    "fix": "npm run fix:ts && npm run fix:fmt",
+    "fix:ts": "oxlint -c oxlint.config.mts --fix .",
+    "fix:fmt": "oxfmt .",
+    "test:ci": "node ./out/test/runTestsCI.js"
   },
   "dependencies": {
-    "minimatch": "^3.0.4",
-    "rimraf": "^3.0.2",
+    "minimatch": "^10.2.5",
     "talon-rpc": "2.2.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.12.2",
+    "@types/vscode": "1.98.0",
+    "fast-glob": "^3.3.3",
+    "mocha": "^11.7.5",
+    "oxfmt": "^0.46.0",
+    "oxlint-tsgolint": "^0.22.0",
+    "oxlint": "^1.61.0",
+    "typescript": "^6.0.3",
+    "vscode-test": "^1.4.1"
   }
 }

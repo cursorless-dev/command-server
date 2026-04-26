@@ -5,10 +5,12 @@ export function getCommunicationDirLocationSetting(): string | undefined {
     .getConfiguration("command-server")
     .get<string>("communicationDirLocation")
     ?.trim();
-  return value ? value : undefined;
+  return value != null && value !== "" ? value : undefined;
 }
 
-export function onCommunicationDirLocationSettingChange(callback: () => void) {
+export function onCommunicationDirLocationSettingChange(
+  callback: () => void,
+): void {
   vscode.workspace.onDidChangeConfiguration((e) => {
     if (e.affectsConfiguration("command-server.communicationDirLocation")) {
       callback();
