@@ -2,7 +2,7 @@
   "name": "command-server",
   "displayName": "Command server",
   "description": "Exposes a file-based RPC API for running VSCode commands",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "publisher": "pokey",
   "license": "MIT",
   "repository": {
@@ -23,7 +23,8 @@
   "files": [
     "out",
     "!out/test",
-    "images"
+    "images",
+    "CHANGELOG.md"
   ],
   "extensionKind": [
     "ui"
@@ -148,9 +149,9 @@
     "@types/vscode": "1.98.0",
     "fast-glob": "^3.3.3",
     "mocha": "^11.7.5",
-    "oxfmt": "^0.46.0",
-    "oxlint-tsgolint": "^0.22.0",
-    "oxlint": "^1.61.0",
+    "oxfmt": "^0.47.0",
+    "oxlint-tsgolint": "^0.22.1",
+    "oxlint": "^1.62.0",
     "typescript": "^6.0.3",
     "vscode-test": "^1.4.1"
   }
