@@ -2,7 +2,7 @@
   "name": "command-server",
   "displayName": "Command server",
   "description": "Exposes a file-based RPC API for running VSCode commands",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "publisher": "pokey",
   "license": "MIT",
   "repository": {
@@ -20,12 +20,6 @@
   ],
   "main": "./out/extension.js",
   "icon": "images/icon.png",
-  "files": [
-    "out",
-    "!out/test",
-    "images",
-    "CHANGELOG.md"
-  ],
   "extensionKind": [
     "ui"
   ],
