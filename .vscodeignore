@@ -1,0 +1,10 @@
+**
+
+!out/*.js
+!images/**
+!node_modules/**
+
+!package.json
+!README.md
+!LICENSE
+!CHANGELOG.md

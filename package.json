@@ -20,12 +20,6 @@
   ],
   "main": "./out/extension.js",
   "icon": "images/icon.png",
-  "files": [
-    "out",
-    "!out/test",
-    "images",
-    "CHANGELOG.md"
-  ],
   "extensionKind": [
     "ui"
   ],
